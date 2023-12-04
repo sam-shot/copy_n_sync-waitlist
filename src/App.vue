@@ -87,7 +87,7 @@ const onNameChanged = (event) => {
       </p>
       <div class="text-4xl font-bold text-center mb-12 px-4 flex justify-center"><span
         class="from-green-700 via-cyan-600 to-green-500 bg-gradient-to-r bg-clip-text text-transparent">CopyNSync!</span>
-        <span class="text-xs p-1 from-green-800 to-cyan-600 border bg-gradient-to-b  h-fit rounded-md mt-1 ml-2">beta</span>
+        <span class="text-xs px-1 py- from-green-800 to-cyan-600 border bg-gradient-to-b  h-fit rounded-md mt-1 ml-2">beta</span>
       </div>
       <div class="w-5/6 relative mb-5 m-auto">
         <div class="absolute h-full flex flex-col justify-center px-3 "><i class="uil uil-user"></i></div>

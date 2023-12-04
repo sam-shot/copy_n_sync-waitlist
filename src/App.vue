@@ -2,13 +2,17 @@
 import { ref } from 'vue';
 var isLoading = ref(false);
 var showModal = ref(false);
+var errorText = ref('');
+var errorModal = ref(false);
+
+const regex = /^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$/;
 
 const joinWaitlist = async () => {
-  if (email.value == "") {
-    showError()
-  }
+  if (email.value.length <1) return showError("Email and name fields should not be empty");
+  // if (regex.text(email.value)) return showError("Invalid Email");
+  
   isLoading.value = true;
-
+  errorModal.value = false;
   await new Promise(resolve => setTimeout(resolve, 3000));
   showModal.value = true;
   isLoading.value = false;
@@ -16,8 +20,10 @@ const joinWaitlist = async () => {
 
 }
 
-const showError = ()=> {
-
+const showError = (text)=> {
+  console.log("OMO");
+  errorText.value = text;
+  errorModal.value  = true;
 }
 
 var email = ref('');
@@ -29,8 +35,13 @@ const onEmailChanged = (event) => {
 </script>
 
 <template>
+  <div v-if="errorModal" class="p-3 text-blue-200 font-bold text-sm bg-red-600 rounded-lg absolute m-6 right-0 sm:right-10 top-10 flex items-center gap-3">{{ errorText }}
+    <button @click="errorModal = false"
+    class=" w-9 h-9 bg-red-500 flex flex-row justify-center items-center rounded-lg  "><i
+      class="uil uil-times text-xl "></i></button>
+
+  </div>
   <div class="flex flex-row justify-center text-blue-200 items-center w-screen h-screen">
-    <!-- <div class="p-3 bg-red-600 ">,</div> -->
     <div class="flex flex-col justify-center">
       <img src="./icon.png" alt="" class="mx-auto w-16 mb-10  inline">
       <p class=" text-4xl font-bold text-center mb-12 px-4">Join the waitlist for<br> <span
@@ -47,7 +58,7 @@ const onEmailChanged = (event) => {
           class="font-medium w-full text-sm bg-neutral-800 pl-9 px-3 py-3 rounded-md bg-transparent border border-neutral-500">
       </div>
       <div class="w-5/6  m-auto mb-20">
-        <button :disabled="isLoading" @click="joinWaitlist()"
+        <button :disabled="isLoading" @click="joinWaitlist"
           class="hover:transition-all duration-500  transform hover:-translate-y-1  hover:duration-500 py-3 from-green-800 to-cyan-700 text-white font-semibold  w-full rounded-md "
           :class="[!isLoading ? 'bg-gradient-to-r' : '', 'bg-neutral-700 text-neutral-400']"> <span v-if="isLoading"
             class="loader"></span> <span v-if="!isLoading"> Continue<i class="uil uil-arrow-right"></i></span></button>

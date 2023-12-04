@@ -4,41 +4,79 @@ var isLoading = ref(false);
 var showModal = ref(false);
 var errorText = ref('');
 var errorModal = ref(false);
+var success = ref(false);
+
+var sendModalText = ref('')
 
 const regex = /^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$/;
 
 const joinWaitlist = async () => {
-  if (email.value.length <1) return showError("Email and name fields should not be empty");
-  // if (regex.text(email.value)) return showError("Invalid Email");
-  
+  if (email.value.length < 1 || name.value.length < 1) return showError("Email and name fields should not be empty");
+  if (!regex.test(email.value)) return showError("Invalid Email");
+
   isLoading.value = true;
   errorModal.value = false;
-  await new Promise(resolve => setTimeout(resolve, 3000));
-  showModal.value = true;
-  isLoading.value = false;
+  const url = 'https://copy-n-sync-backend.vercel.app/waitlist';
+  const data = {
+    name: name.value,
+    email: email.value,
+  };
+
+  await fetch(url, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(data),
+  })
+    .then(response => response.json())
+    .then(data => {
+      if (data.status == 200) {
+        success.value = true;
+        sendModalText.value = "You have been added to the waitlist!";
+        showModal.value = true;
+      } else {
+        success.value = false;
+        sendModalText.value = "Thanks for trying out again, You are already on the waitlist!";
+        showModal.value = true;
+      }
+      isLoading.value = false;
+    })
+    .catch(error => {
+      showError(error.message);
+      setTimeout(() => {
+        errorModal.value = false;
+      }, 2600);
+
+      isLoading.value = false;
+    });
   // await 
 
 }
 
-const showError = (text)=> {
-  console.log("OMO");
+const showError = (text) => {
   errorText.value = text;
-  errorModal.value  = true;
+  errorModal.value = true;
 }
 
 var email = ref('');
+var name = ref('');
 const onEmailChanged = (event) => {
   email.value = event.target.value;
-  console.log(email.value);
+}
+const onNameChanged = (event) => {
+  name.value = event.target.value;
 }
 
 </script>
 
 <template>
-  <div v-if="errorModal" class="p-3 text-blue-200 font-bold text-sm bg-red-600 rounded-lg absolute m-6 right-0 sm:right-10 top-10 flex items-center gap-3">{{ errorText }}
+  <div v-if="errorModal"
+    class="p-3 text-blue-200 font-bold text-sm bg-red-600 rounded-lg absolute m-6 right-0 sm:right-10 top-10 flex items-center gap-3">
+    {{ errorText }}
     <button @click="errorModal = false"
-    class=" w-9 h-9 bg-red-500 flex flex-row justify-center items-center rounded-lg  "><i
-      class="uil uil-times text-xl "></i></button>
+      class=" w-9 h-9 bg-red-500 flex flex-row justify-center items-center rounded-lg  "><i
+        class="uil uil-times text-xl "></i></button>
 
   </div>
   <div class="flex flex-row justify-center text-blue-200 items-center w-screen h-screen">
@@ -49,12 +87,13 @@ const onEmailChanged = (event) => {
       </p>
       <div class="w-5/6 relative mb-5 m-auto">
         <div class="absolute h-full flex flex-col justify-center px-3 "><i class="uil uil-user"></i></div>
-        <input type="text" autocomplete="name" name="" placeholder="Full name" id=""
+        <input type="text" v-model="name" @input="onNameChanged" autocomplete="name" name="" placeholder="Full name" id=""
           class="font-medium w-full text-sm bg-neutral-800 pl-9 px-3 py-3 rounded-md bg-transparent border border-neutral-500">
       </div>
       <div class="w-5/6 relative mb-7 m-auto">
         <div class="absolute h-full flex flex-col justify-center px-3 "><i class="uil uil-envelope "></i></div>
-        <input type="email" v-model="email" @input="onEmailChanged" autocomplete="email" name="" placeholder="Email address" id=""
+        <input type="email" v-model="email" @input="onEmailChanged" autocomplete="email" name=""
+          placeholder="Email address" id=""
           class="font-medium w-full text-sm bg-neutral-800 pl-9 px-3 py-3 rounded-md bg-transparent border border-neutral-500">
       </div>
       <div class="w-5/6  m-auto mb-20">
@@ -82,13 +121,17 @@ const onEmailChanged = (event) => {
           class=" w-9 h-9 bg-gray-800 flex flex-row justify-center items-center rounded-lg "><i
             class="uil uil-times text-xl "></i></button>
       </div>
-    <img src="./success.png" class="w-32" alt="">
-    <p class=" text-2xl font-medium  text-center text-white mb-12 px-4">You have been added to the waitlist!
-    </p>
-    <p class=" text-base font-bold  text-center text-neutral-500 mb-12 "><span class="to-white via-cyan-400 from-green-500 bg-gradient-to-r bg-clip-text text-transparent">{{email}}</span> will be informed as soon as CopyNSync is
-      ready!
-    </p>
+      <img v-if="success" src="./success.png" class="w-32" alt="">
+      <img v-else src="./info.png" class="w-32 mb-2" alt="">
+      <p class=" text-2xl font-medium  text-center text-white mb-12 px-4">{{ sendModalText }}
+      </p>
+      <p  class=" text-base font-bold  text-center text-neutral-500 mb-12 "><span
+          class="to-white via-cyan-400 from-green-500 bg-gradient-to-r bg-clip-text text-transparent">{{ email }}</span>
+        will be informed as soon as CopyNSync is
+        ready!
+      </p>
+    </div>
   </div>
-</div></template>
+</template>
 
 <style scoped></style>

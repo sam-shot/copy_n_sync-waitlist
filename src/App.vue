@@ -82,9 +82,13 @@ const onNameChanged = (event) => {
   <div class="flex flex-row justify-center text-blue-200 items-center w-screen h-screen">
     <div class="flex flex-col justify-center">
       <img src="./icon.png" alt="" class="mx-auto w-16 mb-10  inline">
-      <p class=" text-4xl font-bold text-center mb-12 px-4">Join the waitlist for<br> <span
-          class="from-green-700 via-cyan-600 to-green-500 bg-gradient-to-r bg-clip-text text-transparent">CopyNSync!</span>
+      <p class=" text-4xl font-bold text-center  px-4">Join the waitlist for<br> 
+         
       </p>
+      <div class="text-4xl font-bold text-center mb-12 px-4 flex justify-center"><span
+        class="from-green-700 via-cyan-600 to-green-500 bg-gradient-to-r bg-clip-text text-transparent">CopyNSync!</span>
+        <span class="text-xs p-1 from-green-800 to-cyan-600 border bg-gradient-to-b  h-fit rounded-md mt-1 ml-2">beta</span>
+      </div>
       <div class="w-5/6 relative mb-5 m-auto">
         <div class="absolute h-full flex flex-col justify-center px-3 "><i class="uil uil-user"></i></div>
         <input type="text" v-model="name" @input="onNameChanged" autocomplete="name" name="" placeholder="Full name" id=""

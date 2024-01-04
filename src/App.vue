@@ -110,7 +110,7 @@ const onNameChanged = (event) => {
   </div>
 
   <div class="absolute bottom-6 left-0 right-0 flex flex-row justify-center text-neutral-500">
-    <span>Made with <img src="./heart.png" alt="" class="mx-1 w-4 inline"> by <a href="https://twitter.com/samshot_01"
+    <span>Made with <img src="./heart.png" alt="" class="mx-1 w-4 inline"> by <a href="https://x.com/samshot_01"
         target="_blank"
         class="font-medium from-green-600 via-cyan-400 to-green-500 bg-gradient-to-r bg-clip-text text-transparent">
         samshot_01</a></span>
